@@ -57,9 +57,9 @@ export default function Home() {
           {jobs.map((job) => (
             <Card key={job.id} className="group flex flex-col transition-all hover:border-primary-600 hover:shadow-none border-2">
               <CardHeader className="pb-4">
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-none bg-slate-100 p-2 overflow-hidden border border-slate-200">
+                <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-none bg-slate-100 p-2 overflow-hidden border border-slate-200">
                   {job.imageUrl ? (
-                    <img src={job.imageUrl} alt={job.company} className="h-full w-full object-contain" />
+                    <img src={job.imageUrl} alt={job.company} className="h-full w-full object-cover" />
                   ) : (
                     <Building2 className="text-slate-400" size={24} />
                   )}

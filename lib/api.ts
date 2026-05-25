@@ -7,7 +7,7 @@ export class ApiError extends Error {
   }
 }
 
-async function fetchWithAuth(endpoint: string, options: RequestInit = {}) {
+async function fetchWithAuth<T = any>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
   
   const headers: Record<string, string> = {
@@ -31,27 +31,27 @@ async function fetchWithAuth(endpoint: string, options: RequestInit = {}) {
 
   // Handle empty responses (like 204 No Content)
   const text = await response.text();
-  return text ? JSON.parse(text) : null;
+  return (text ? JSON.parse(text) : null) as T;
 }
 
 export const api = {
-  get: (endpoint: string, options?: RequestInit) => 
-    fetchWithAuth(endpoint, { ...options, method: 'GET' }),
+  get: <T = any>(endpoint: string, options?: RequestInit) => 
+    fetchWithAuth<T>(endpoint, { ...options, method: 'GET' }),
   
-  post: (endpoint: string, data: any, options?: RequestInit) => 
-    fetchWithAuth(endpoint, { 
+  post: <T = any>(endpoint: string, data: any, options?: RequestInit) => 
+    fetchWithAuth<T>(endpoint, { 
       ...options, 
       method: 'POST', 
       body: JSON.stringify(data) 
     }),
   
-  put: (endpoint: string, data: any, options?: RequestInit) => 
-    fetchWithAuth(endpoint, { 
+  put: <T = any>(endpoint: string, data: any, options?: RequestInit) => 
+    fetchWithAuth<T>(endpoint, { 
       ...options, 
       method: 'PUT', 
       body: JSON.stringify(data) 
     }),
   
-  delete: (endpoint: string, options?: RequestInit) => 
-    fetchWithAuth(endpoint, { ...options, method: 'DELETE' }),
+  delete: <T = any>(endpoint: string, options?: RequestInit) => 
+    fetchWithAuth<T>(endpoint, { ...options, method: 'DELETE' }),
 };

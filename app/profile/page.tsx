@@ -11,6 +11,8 @@ import { User as UserIcon } from "lucide-react";
 interface UserProfile {
   name: string | null;
   email: string;
+  currentPassword?: string;
+  newPassword?: string;
 }
 
 export default function ProfilePage() {
@@ -23,6 +25,8 @@ export default function ProfilePage() {
   const [formData, setFormData] = useState<UserProfile>({
     name: "",
     email: "",
+    currentPassword: "",
+    newPassword: "",
   });
 
   useEffect(() => {
@@ -61,6 +65,7 @@ export default function ProfilePage() {
     try {
       await api.put<{ user: UserProfile }>("/auth/me", formData);
       setSuccess("Profile updated successfully!");
+      setFormData((prev) => ({ ...prev, currentPassword: "", newPassword: "" }));
     } catch (err: any) {
       setError(err.message || "Failed to update profile");
     } finally {
@@ -134,6 +139,41 @@ export default function ProfilePage() {
                 onChange={handleChange}
                 placeholder="you@example.com"
               />
+            </div>
+
+            <div className="border-t-2 border-slate-200 pt-6 mt-6">
+              <h3 className="text-lg font-semibold text-slate-900 mb-4">Update Password</h3>
+              <p className="text-sm text-slate-500 mb-6">Leave blank if you don't want to change your password.</p>
+              
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <label htmlFor="currentPassword" className="text-sm font-medium text-slate-700">
+                    Current Password
+                  </label>
+                  <Input
+                    id="currentPassword"
+                    name="currentPassword"
+                    type="password"
+                    value={formData.currentPassword}
+                    onChange={handleChange}
+                    placeholder="Enter current password"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label htmlFor="newPassword" className="text-sm font-medium text-slate-700">
+                    New Password
+                  </label>
+                  <Input
+                    id="newPassword"
+                    name="newPassword"
+                    type="password"
+                    value={formData.newPassword}
+                    onChange={handleChange}
+                    placeholder="Enter new password"
+                  />
+                </div>
+              </div>
             </div>
 
             <div className="pt-4">
