@@ -11,7 +11,7 @@ export function Footer() {
               <div className="flex h-8 w-8 items-center justify-center rounded-none bg-primary-600 text-white">
                 <Briefcase size={18} />
               </div>
-              <span className="text-xl font-bold tracking-tight text-slate-900">JobBoard</span>
+              <span className="text-xl font-bold tracking-tight text-slate-900">Joberra</span>
             </Link>
             <p className="mt-4 text-sm text-slate-900">
               The premier destination for professional career opportunities.
@@ -52,10 +52,10 @@ export function Footer() {
             <h3 className="text-sm font-semibold text-slate-900 uppercase tracking-wider mb-4">Legal</h3>
             <ul className="space-y-3">
               <li>
-                <a href="#" className="text-sm text-slate-900 hover:text-primary-600 transition-colors">Privacy Policy</a>
+                <Link href="/privacy" className="text-sm text-slate-900 hover:text-primary-600 transition-colors">Privacy Policy</Link>
               </li>
               <li>
-                <a href="#" className="text-sm text-slate-600 hover:text-primary-600 transition-colors">Terms of Service</a>
+                <Link href="/terms" className="text-sm text-slate-600 hover:text-primary-600 transition-colors">Terms of Service</Link>
               </li>
             </ul>
           </div>

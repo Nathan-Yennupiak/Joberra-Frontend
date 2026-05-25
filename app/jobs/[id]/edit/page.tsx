@@ -134,12 +134,21 @@ export default function EditJob() {
                   onChange={handleChange}
                   className="flex h-10 w-full rounded-none border-2 border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:border-primary-600 focus:ring-0 transition-colors"
                 >
-                  <option value="Engineering">Engineering</option>
-                  <option value="Design">Design</option>
-                  <option value="Marketing">Marketing</option>
-                  <option value="Product">Product</option>
-                  <option value="Sales">Sales</option>
-                  <option value="General">General</option>
+                 <option value="Technology">Technology</option>
+                 <option value="Design">Design</option>
+                 <option value="Marketing">Marketing</option>
+                 <option value="Business">Business</option>
+                 <option value="Finance">Finance</option>
+                 <option value="HR">HR</option>
+                 <option value="Healthcare">Healthcare</option>
+                 <option value="Legal">Legal</option>
+                 <option value="Engineering">Engineering</option>
+                 <option value="Logistics">Logistics</option>
+                 <option value="Education">Education</option>
+                 <option value="Support">Support</option>
+                 <option value="Government">Government</option>
+                 <option value="Agriculture">Agriculture</option>
+                 <option value="Science">Science</option>
                 </select>
               </div>
             </div>

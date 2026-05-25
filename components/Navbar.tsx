@@ -72,16 +72,16 @@ export function Navbar() {
           <div className="flex h-8 w-8 items-center justify-center rounded-none bg-primary-600 text-white">
             <Briefcase size={18} />
           </div>
-          <span className="text-xl font-bold tracking-tight text-slate-900">JobBoard</span>
+          <span className="text-xl font-bold tracking-tight text-slate-900">Joberra</span>
         </Link>
         
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center space-x-4">
           <Link href="/">
-            <Button variant="ghost" className="text-sm font-medium">Home</Button>
+            <Button variant="ghost" className={`text-sm font-medium ${pathname === '/' ? 'bg-slate-100 text-slate-900' : 'text-slate-600 hover:text-slate-900'}`}>Home</Button>
           </Link>
           <Link href="/jobs">
-            <Button variant="ghost" className="text-sm font-medium">Jobs</Button>
+            <Button variant="ghost" className={`text-sm font-medium ${pathname === '/jobs' ? 'bg-slate-100 text-slate-900' : 'text-slate-600 hover:text-slate-900'}`}>Jobs</Button>
           </Link>
           
           {isLoggedIn ? (
@@ -113,11 +113,11 @@ export function Navbar() {
                       <p className="text-sm font-medium text-slate-900 truncate">{user?.name || "User"}</p>
                       <p className="text-xs text-slate-500 truncate">{user?.email || ""}</p>
                     </div>
-                    <Link href="/dashboard" className="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary-600">
+                    <Link href="/dashboard" className={`flex items-center px-4 py-2 text-sm hover:bg-slate-50 hover:text-primary-600 ${pathname === '/dashboard' ? 'text-primary-600 bg-slate-50 font-medium' : 'text-slate-700'}`}>
                       <LayoutDashboard size={16} className="mr-2" />
                       Dashboard
                     </Link>
-                    <Link href="/profile" className="flex items-center px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary-600">
+                    <Link href="/profile" className={`flex items-center px-4 py-2 text-sm hover:bg-slate-50 hover:text-primary-600 ${pathname === '/profile' ? 'text-primary-600 bg-slate-50 font-medium' : 'text-slate-700'}`}>
                       <UserCircle size={16} className="mr-2" />
                       Profile
                     </Link>
@@ -160,10 +160,10 @@ export function Navbar() {
       {isMobileMenuOpen && (
         <div className="md:hidden border-t border-slate-200 bg-white px-4 py-4 space-y-4 shadow-lg">
           <Link href="/" onClick={() => setIsMobileMenuOpen(false)}>
-            <Button variant="ghost" className="w-full justify-start text-sm font-medium">Home</Button>
+            <Button variant="ghost" className={`w-full justify-start text-sm font-medium ${pathname === '/' ? 'bg-slate-100 text-slate-900' : 'text-slate-600 hover:text-slate-900'}`}>Home</Button>
           </Link>
           <Link href="/jobs" onClick={() => setIsMobileMenuOpen(false)}>
-            <Button variant="ghost" className="w-full justify-start text-sm font-medium">Jobs</Button>
+            <Button variant="ghost" className={`w-full justify-start text-sm font-medium ${pathname === '/jobs' ? 'bg-slate-100 text-slate-900' : 'text-slate-600 hover:text-slate-900'}`}>Jobs</Button>
           </Link>
           
           {isLoggedIn ? (
@@ -175,13 +175,13 @@ export function Navbar() {
                 </Button>
               </Link>
               <Link href="/dashboard" onClick={() => setIsMobileMenuOpen(false)}>
-                <Button variant="ghost" className="w-full justify-start text-sm font-medium">
+                <Button variant="ghost" className={`w-full justify-start text-sm font-medium ${pathname === '/dashboard' ? 'bg-slate-100 text-slate-900' : 'text-slate-600 hover:text-slate-900'}`}>
                   <LayoutDashboard size={16} className="mr-2" />
                   Dashboard
                 </Button>
               </Link>
               <Link href="/profile" onClick={() => setIsMobileMenuOpen(false)}>
-                <Button variant="ghost" className="w-full justify-start text-sm font-medium">
+                <Button variant="ghost" className={`w-full justify-start text-sm font-medium ${pathname === '/profile' ? 'bg-slate-100 text-slate-900' : 'text-slate-600 hover:text-slate-900'}`}>
                   <UserCircle size={16} className="mr-2" />
                   Profile
                 </Button>
