@@ -98,9 +98,9 @@ export default function Dashboard() {
           {jobs.map((job) => (
             <Card key={job.id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-6">
               <div className="flex items-start gap-4 mb-4 sm:mb-0">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-none border-2 border-slate-200 bg-slate-50 p-2">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-none border-2 border-slate-200 bg-slate-50 p-1">
                   {job.imageUrl ? (
-                    <img src={job.imageUrl} alt={job.company} className="h-full w-full object-contain" />
+                    <img src={job.imageUrl} alt={job.company} className="h-full w-full object-cover" />
                   ) : (
                     <Building2 className="text-slate-400" size={24} />
                   )}

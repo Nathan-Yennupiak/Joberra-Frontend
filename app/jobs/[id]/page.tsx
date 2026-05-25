@@ -64,9 +64,9 @@ export default function JobDetails() {
         <div className="border-b-2 border-slate-200 bg-slate-50/50 p-6 sm:p-10">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
             <div className="flex items-start gap-6">
-              <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-none border-2 border-slate-200 bg-white p-3 shadow-none">
+              <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-none border-2 border-slate-200 bg-white p-1 shadow-none">
                 {job.imageUrl ? (
-                  <img src={job.imageUrl} alt={job.company} className="h-full w-full object-contain" />
+                  <img src={job.imageUrl} alt={job.company} className="h-full w-full object-cover" />
                 ) : (
                   <Building2 className="text-slate-400" size={32} />
                 )}
