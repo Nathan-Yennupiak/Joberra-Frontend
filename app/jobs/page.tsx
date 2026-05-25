@@ -11,6 +11,7 @@ import Link from "next/link";
 import toast from "react-hot-toast";
 import { JOB_CATEGORIES, JOB_TYPES } from "@/lib/constants";
 import { stripFormatting } from "@/lib/utils";
+import { JobLogo } from "@/components/JobLogo";
 
 const CATEGORIES = ["All", ...JOB_CATEGORIES];
 const FILTER_JOB_TYPES = ["All", ...JOB_TYPES];
@@ -205,11 +206,7 @@ export default function JobsPage() {
               <CardHeader className="pb-4">
                 <div className="flex justify-between items-start w-full">
                   <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-none bg-slate-100 overflow-hidden border border-slate-200">
-                    {job.imageUrl ? (
-                      <img src={job.imageUrl} alt={job.company} className="h-full w-full object-cover" />
-                    ) : (
-                      <Building2 className="text-slate-400" size={24} />
-                    )}
+                    <JobLogo imageUrl={job.imageUrl} company={job.company} />
                   </div>
                   <button
                     onClick={() => toggleSaveJob(job.id)}

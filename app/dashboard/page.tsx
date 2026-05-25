@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { Plus, Edit2, Trash2, Building2, Clock } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { JobLogo } from "@/components/JobLogo";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -99,11 +100,7 @@ export default function Dashboard() {
             <Card key={job.id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-6">
               <div className="flex items-start gap-4 mb-4 sm:mb-0">
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-none border-2 border-slate-200 bg-slate-50 p-1">
-                  {job.imageUrl ? (
-                    <img src={job.imageUrl} alt={job.company} className="h-full w-full object-cover" />
-                  ) : (
-                    <Building2 className="text-slate-400" size={24} />
-                  )}
+                  <JobLogo imageUrl={job.imageUrl} company={job.company} />
                 </div>
                 <div>
                   <h3 className="text-lg font-semibold text-slate-900 line-clamp-1">

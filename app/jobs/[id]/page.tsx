@@ -5,14 +5,17 @@ import { useParams, useRouter } from "next/navigation";
 import { api } from "@/lib/api";
 import { IJob } from "@/lib/types";
 import { Button } from "@/components/ui/Button";
-import { MapPin, Building2, Clock, ExternalLink, ArrowLeft } from "lucide-react";
+import { MapPin, Building2, Clock, ExternalLink, ArrowLeft, Bookmark } from "lucide-react";
 import Link from "next/link";
+import toast from "react-hot-toast";
+import { JobLogo } from "@/components/JobLogo";
 
 export default function JobDetails() {
   const { id } = useParams();
   const router = useRouter();
   const [job, setJob] = useState<IJob | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSaved, setIsSaved] = useState(false);
 
   useEffect(() => {
     const fetchJob = async () => {
@@ -25,10 +28,45 @@ export default function JobDetails() {
         setIsLoading(false);
       }
     };
+
+    const checkIfSaved = async () => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        try {
+          const savedJobs = await api.get('/saved-jobs');
+          const saved = savedJobs.some((j: IJob) => j.id === id);
+          setIsSaved(saved);
+        } catch (error) {
+          console.error("Failed to fetch saved jobs:", error);
+        }
+      }
+    };
+
     if (id) {
       fetchJob();
+      checkIfSaved();
     }
   }, [id]);
+
+  const toggleSaveJob = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      toast.error("You must be logged in to save jobs.");
+      return;
+    }
+    try {
+      const res = await api.post(`/saved-jobs/${id}`, {});
+      if (res.saved) {
+        setIsSaved(true);
+        toast.success("Job saved!");
+      } else {
+        setIsSaved(false);
+        toast.success("Job removed from saved!");
+      }
+    } catch (error) {
+      toast.error("Failed to save job.");
+    }
+  };
 
   if (isLoading) {
     return (
@@ -65,11 +103,7 @@ export default function JobDetails() {
           <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
             <div className="flex items-start gap-6">
               <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-none border-2 border-slate-200 bg-white p-1 shadow-none">
-                {job.imageUrl ? (
-                  <img src={job.imageUrl} alt={job.company} className="h-full w-full object-cover" />
-                ) : (
-                  <Building2 className="text-slate-400" size={32} />
-                )}
+                <JobLogo imageUrl={job.imageUrl} company={job.company} />
               </div>
               <div>
                 <h1 className="mb-2 text-2xl font-bold text-slate-900 sm:text-3xl">{job.title}</h1>
@@ -93,7 +127,16 @@ export default function JobDetails() {
               </div>
             </div>
             
-            
+            <div className="flex shrink-0">
+              <button
+                onClick={toggleSaveJob}
+                className="flex items-center gap-2 rounded-none border-2 border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition-colors hover:border-primary-600 hover:text-primary-600 focus:outline-none sm:h-12"
+                aria-label={isSaved ? "Remove saved job" : "Save job"}
+              >
+                <Bookmark className={isSaved ? "fill-primary-600 text-primary-600" : ""} size={20} />
+                <span className="hidden sm:inline">{isSaved ? "Saved" : "Save Job"}</span>
+              </button>
+            </div>
           </div>
         </div>
 

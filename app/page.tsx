@@ -5,13 +5,16 @@ import { api } from "@/lib/api";
 import { IJob } from "@/lib/types";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
-import { MapPin, Building2, Clock, ExternalLink, ChevronRight } from "lucide-react";
+import { MapPin, Building2, Clock, ExternalLink, ChevronRight, Bookmark } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import toast from "react-hot-toast";
 import { stripFormatting } from "@/lib/utils";
+import { JobLogo } from "@/components/JobLogo";
 
 export default function Home() {
   const [jobs, setJobs] =  useState<IJob[]>([]);
+  const [savedJobIds, setSavedJobIds] = useState<Set<string>>(new Set());
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -25,8 +28,47 @@ export default function Home() {
         setIsLoading(false);
       }
     };
+
+    const fetchSavedJobs = async () => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        try {
+          const savedJobs = await api.get('/saved-jobs');
+          const ids = new Set<string>(savedJobs.map((j: IJob) => j.id));
+          setSavedJobIds(ids);
+        } catch (error) {
+          console.error("Failed to fetch saved jobs:", error);
+        }
+      }
+    };
+
     fetchJobs();
+    fetchSavedJobs();
   }, []);
+
+  const toggleSaveJob = async (jobId: string) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      toast.error("You must be logged in to save jobs.");
+      return;
+    }
+    try {
+      const res = await api.post(`/saved-jobs/${jobId}`, {});
+      if (res.saved) {
+        setSavedJobIds((prev) => new Set(prev).add(jobId));
+        toast.success("Job saved!");
+      } else {
+        setSavedJobIds((prev) => {
+          const next = new Set(prev);
+          next.delete(jobId);
+          return next;
+        });
+        toast.success("Job removed from saved!");
+      }
+    } catch (error) {
+      toast.error("Failed to save job.");
+    }
+  };
 
   if (isLoading) {
     return (
@@ -59,12 +101,17 @@ export default function Home() {
             {jobs.map((job) => (
               <Card key={job.id} className="group flex flex-col transition-all hover:border-primary-600 hover:shadow-none border-2">
                 <CardHeader className="pb-4">
-                  <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-none bg-slate-100 overflow-hidden border border-slate-200">
-                    {job.imageUrl ? (
-                      <img src={job.imageUrl} alt={job.company} className="h-full w-full object-cover" />
-                    ) : (
-                      <Building2 className="text-slate-400" size={24} />
-                    )}
+                  <div className="flex justify-between items-start w-full">
+                    <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-none bg-slate-100 overflow-hidden border border-slate-200">
+                      <JobLogo imageUrl={job.imageUrl} company={job.company} />
+                    </div>
+                    <button
+                      onClick={() => toggleSaveJob(job.id)}
+                      className="p-2 text-slate-400 hover:text-primary-600 focus:outline-none transition-colors"
+                      aria-label={savedJobIds.has(job.id) ? "Remove saved job" : "Save job"}
+                    >
+                      <Bookmark className={savedJobIds.has(job.id) ? "fill-primary-600 text-primary-600" : ""} size={20} />
+                    </button>
                   </div>
                   <CardTitle className="line-clamp-1 text-lg">{job.title}</CardTitle>
                   <CardDescription className="flex items-center text-sm font-medium text-slate-700">
