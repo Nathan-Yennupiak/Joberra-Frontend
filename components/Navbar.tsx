@@ -37,6 +37,9 @@ export function Navbar() {
               <Link href="/dashboard">
                 <Button variant="ghost" className="text-sm font-medium">Dashboard</Button>
               </Link>
+              <Link href="/profile">
+                <Button variant="ghost" className="text-sm font-medium">Profile</Button>
+              </Link>
               <Button variant="outline" size="sm" onClick={handleLogout} className="text-slate-600">
                 <LogOut size={16} className="mr-2" />
                 Log out

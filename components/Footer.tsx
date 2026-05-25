@@ -33,7 +33,7 @@ export function Footer() {
             </ul>
           </div>
           
-          <div>
+          {/* <div>
             <h3 className="text-sm font-semibold text-slate-900 uppercase tracking-wider mb-4">Company</h3>
             <ul className="space-y-3">
               <li>
@@ -46,7 +46,7 @@ export function Footer() {
                 <a href="#" className="text-sm text-slate-900 hover:text-primary-600 transition-colors">Contact</a>
               </li>
             </ul>
-          </div>
+          </div> */}
           
           <div>
             <h3 className="text-sm font-semibold text-slate-900 uppercase tracking-wider mb-4">Legal</h3>
