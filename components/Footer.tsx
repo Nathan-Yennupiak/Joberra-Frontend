@@ -13,7 +13,7 @@ export function Footer() {
               </div>
               <span className="text-xl font-bold tracking-tight text-slate-900">JobBoard</span>
             </Link>
-            <p className="mt-4 text-sm text-slate-500">
+            <p className="mt-4 text-sm text-slate-900">
               The premier destination for professional career opportunities.
             </p>
           </div>
@@ -22,13 +22,13 @@ export function Footer() {
             <h3 className="text-sm font-semibold text-slate-900 uppercase tracking-wider mb-4">Platform</h3>
             <ul className="space-y-3">
               <li>
-                <Link href="/" className="text-sm text-slate-600 hover:text-primary-600 transition-colors">Find Jobs</Link>
+                <Link href="/" className="text-sm text-slate-900 hover:text-primary-600 transition-colors">Find Jobs</Link>
               </li>
               <li>
-                <Link href="/dashboard" className="text-sm text-slate-600 hover:text-primary-600 transition-colors">Employer Dashboard</Link>
+                <Link href="/dashboard" className="text-sm text-slate-900 hover:text-primary-600 transition-colors">Employer Dashboard</Link>
               </li>
               <li>
-                <Link href="/jobs/new" className="text-sm text-slate-600 hover:text-primary-600 transition-colors">Post a Job</Link>
+                <Link href="/jobs/new" className="text-sm text-slate-900 hover:text-primary-600 transition-colors">Post a Job</Link>
               </li>
             </ul>
           </div>
@@ -37,13 +37,13 @@ export function Footer() {
             <h3 className="text-sm font-semibold text-slate-900 uppercase tracking-wider mb-4">Company</h3>
             <ul className="space-y-3">
               <li>
-                <a href="#" className="text-sm text-slate-600 hover:text-primary-600 transition-colors">About Us</a>
+                <a href="#" className="text-sm text-slate-900 hover:text-primary-600 transition-colors">About Us</a>
               </li>
               <li>
-                <a href="#" className="text-sm text-slate-600 hover:text-primary-600 transition-colors">Careers</a>
+                <a href="#" className="text-sm text-slate-900 hover:text-primary-600 transition-colors">Careers</a>
               </li>
               <li>
-                <a href="#" className="text-sm text-slate-600 hover:text-primary-600 transition-colors">Contact</a>
+                <a href="#" className="text-sm text-slate-900 hover:text-primary-600 transition-colors">Contact</a>
               </li>
             </ul>
           </div>
@@ -52,7 +52,7 @@ export function Footer() {
             <h3 className="text-sm font-semibold text-slate-900 uppercase tracking-wider mb-4">Legal</h3>
             <ul className="space-y-3">
               <li>
-                <a href="#" className="text-sm text-slate-600 hover:text-primary-600 transition-colors">Privacy Policy</a>
+                <a href="#" className="text-sm text-slate-900 hover:text-primary-600 transition-colors">Privacy Policy</a>
               </li>
               <li>
                 <a href="#" className="text-sm text-slate-600 hover:text-primary-600 transition-colors">Terms of Service</a>
@@ -61,8 +61,8 @@ export function Footer() {
           </div>
         </div>
         
-        <div className="mt-12 border-t-2 border-slate-200 pt-8 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-sm text-slate-500">
+        <div className="mt-12 border-t-2 border-slate-200 pt-8 flex flex-col md:flex-row justify-center items-center">
+          <p className="text-sm text-slate-900 text-center">
             &copy; {new Date().getFullYear()} JobBoard Inc. All rights reserved.
           </p>
         </div>

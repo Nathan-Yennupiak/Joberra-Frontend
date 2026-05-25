@@ -38,8 +38,8 @@ export default function Home() {
   return (
     <div className="container mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
       <div className="mb-12 text-center">
-        <h1 className="mb-4 text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
-          Find your next <span className="text-primary-600">dream role</span>.
+        <h1 className="mb-4 text-4xl font-extrabold tracking-tight text-slate-900 sm:text-7xl">
+          Find your next <br/> <span className="text-primary-600">dream role</span>.
         </h1>
         <p className="mx-auto max-w-2xl text-lg text-slate-600">
           Discover the best opportunities from top tech companies. Professional, vetted, and waiting for you.
