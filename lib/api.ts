@@ -54,4 +54,26 @@ export const api = {
   
   delete: <T = any>(endpoint: string, options?: RequestInit) => 
     fetchWithAuth<T>(endpoint, { ...options, method: 'DELETE' }),
+
+  upload: async <T = any>(endpoint: string, formData: FormData, options?: RequestInit) => {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+    const headers: Record<string, string> = {
+      ...(options?.headers as Record<string, string>),
+    };
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    const response = await fetch(`${API_URL}${endpoint}`, {
+      ...options,
+      method: 'POST',
+      headers,
+      body: formData,
+    });
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new ApiError(response.status, errorData.message || 'An error occurred');
+    }
+    const text = await response.text();
+    return (text ? JSON.parse(text) : null) as T;
+  },
 };

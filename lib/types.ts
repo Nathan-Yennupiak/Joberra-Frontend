@@ -11,6 +11,8 @@ export interface IJob {
   description: string;
   company: string;
   category: string;
+  location: string;
+  jobType: string;
   imageUrl: string | null;
   jobUrl: string;
   userId: string;

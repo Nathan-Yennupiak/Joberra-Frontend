@@ -4,7 +4,7 @@
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   
   /* Brand colors */
-  --color-primary-50: #eef2ff;
+  --color-primary-50: #f4f7ff;
   --color-primary-100: #e0e7ff;
   --color-primary-500: #6366f1;
   --color-primary-600: #4f46e5;
@@ -14,5 +14,22 @@
 @layer base {
   body {
     @apply bg-slate-50 text-slate-900 antialiased;
+  }
+
+  /* Make ReactQuill editor more readable */
+  .ql-editor {
+    @apply text-slate-700 text-base;
+  }
+  .ql-editor p {
+    margin-bottom: 1em;
+  }
+  .ql-editor h1, .ql-editor h2, .ql-editor h3 {
+    @apply font-bold text-slate-900 mt-6 mb-3;
+  }
+  .ql-editor ul, .ql-editor ol {
+    @apply mb-4 pl-5;
+  }
+  .ql-editor li {
+    @apply mb-1;
   }
 }

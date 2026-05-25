@@ -6,10 +6,14 @@ import { IJob } from "@/lib/types";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
-import { MapPin, Building2, Clock, Search, ChevronRight } from "lucide-react";
+import { MapPin, Building2, Clock, Search, ChevronRight, Bookmark } from "lucide-react";
 import Link from "next/link";
+import toast from "react-hot-toast";
+import { JOB_CATEGORIES, JOB_TYPES } from "@/lib/constants";
+import { stripFormatting } from "@/lib/utils";
 
-const CATEGORIES = ["All", "Engineering", "Design", "Marketing", "Product", "Sales", "General"];
+const CATEGORIES = ["All", ...JOB_CATEGORIES];
+const FILTER_JOB_TYPES = ["All", ...JOB_TYPES];
 
 // Debounce hook
 function useDebounce<T>(value: T, delay: number): T {
@@ -25,27 +29,76 @@ function useDebounce<T>(value: T, delay: number): T {
 
 export default function JobsPage() {
   const [jobs, setJobs] = useState<IJob[]>([]);
+  const [savedJobIds, setSavedJobIds] = useState<Set<string>>(new Set());
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [locationQuery, setLocationQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedJobType, setSelectedJobType] = useState("All");
 
   const debouncedSearchQuery = useDebounce(searchQuery, 300);
+  const debouncedLocationQuery = useDebounce(locationQuery, 300);
 
   const fetchJobs = useCallback(async () => {
     setIsLoading(true);
     try {
       const params = new URLSearchParams();
       if (debouncedSearchQuery) params.append("search", debouncedSearchQuery);
+      if (debouncedLocationQuery) params.append("location", debouncedLocationQuery);
       if (selectedCategory !== "All") params.append("category", selectedCategory);
+      if (selectedJobType !== "All") params.append("jobType", selectedJobType);
       
-      const data = await api.get(`/jobs?${params.toString()}`);
-      setJobs(data);
+      const [jobsData] = await Promise.all([
+        api.get(`/jobs?${params.toString()}`),
+        // We could fetch saved jobs here, but it requires authentication.
+      ]);
+      setJobs(jobsData);
     } catch (error) {
       console.error("Failed to fetch jobs:", error);
     } finally {
       setIsLoading(false);
     }
-  }, [debouncedSearchQuery, selectedCategory]);
+  }, [debouncedSearchQuery, debouncedLocationQuery, selectedCategory, selectedJobType]);
+
+  useEffect(() => {
+    const fetchSavedJobs = async () => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        try {
+          const savedJobs = await api.get('/saved-jobs');
+          const ids = new Set<string>(savedJobs.map((j: IJob) => j.id));
+          setSavedJobIds(ids);
+        } catch (error) {
+          console.error("Failed to fetch saved jobs:", error);
+        }
+      }
+    };
+    fetchSavedJobs();
+  }, []);
+
+  const toggleSaveJob = async (jobId: string) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      toast.error("You must be logged in to save jobs.");
+      return;
+    }
+    try {
+      const res = await api.post(`/saved-jobs/${jobId}`, {});
+      if (res.saved) {
+        setSavedJobIds((prev) => new Set(prev).add(jobId));
+        toast.success("Job saved!");
+      } else {
+        setSavedJobIds((prev) => {
+          const next = new Set(prev);
+          next.delete(jobId);
+          return next;
+        });
+        toast.success("Job removed from saved!");
+      }
+    } catch (error) {
+      toast.error("Failed to save job.");
+    }
+  };
 
   useEffect(() => {
     fetchJobs();
@@ -77,6 +130,32 @@ export default function JobsPage() {
           />
         </div>
 
+        <div className="grid w-full max-w-2xl gap-4 sm:grid-cols-2">
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+              <MapPin className="h-4 w-4 text-slate-400" />
+            </div>
+            <input
+              type="text"
+              className="flex h-10 w-full rounded-none border-2 border-slate-200 bg-white pl-9 pr-3 text-sm focus:border-primary-600 focus:outline-none focus:ring-0 transition-colors shadow-sm"
+              placeholder="City, state, or 'Remote'"
+              value={locationQuery}
+              onChange={(e) => setLocationQuery(e.target.value)}
+            />
+          </div>
+          <div>
+            <select
+              value={selectedJobType}
+              onChange={(e) => setSelectedJobType(e.target.value)}
+              className="flex h-10 w-full rounded-none border-2 border-slate-200 bg-white px-3 py-2 text-sm focus:border-primary-600 focus:outline-none focus:ring-0 transition-colors shadow-sm"
+            >
+              {FILTER_JOB_TYPES.map((type) => (
+                <option key={type} value={type}>{type === "All" ? "All Job Types" : type}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+
         <div className="flex flex-wrap justify-center gap-2">
           {CATEGORIES.map((cat) => (
             <button
@@ -104,13 +183,15 @@ export default function JobsPage() {
           <Search size={48} className="mb-4 text-slate-400" />
           <h3 className="mb-1 text-xl font-semibold text-slate-900">No jobs found</h3>
           <p className="text-slate-500">Try adjusting your search query or category filter.</p>
-          {(searchQuery || selectedCategory !== "All") && (
+          {(searchQuery || locationQuery || selectedCategory !== "All" || selectedJobType !== "All") && (
             <Button
               variant="outline"
               className="mt-6"
               onClick={() => {
                 setSearchQuery("");
+                setLocationQuery("");
                 setSelectedCategory("All");
+                setSelectedJobType("All");
               }}
             >
               Clear filters
@@ -122,12 +203,21 @@ export default function JobsPage() {
           {jobs.map((job) => (
             <Card key={job.id} className="group flex flex-col transition-all hover:border-primary-600 hover:shadow-none border-2">
               <CardHeader className="pb-4">
-                <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-none bg-slate-100 overflow-hidden border border-slate-200">
-                  {job.imageUrl ? (
-                    <img src={job.imageUrl} alt={job.company} className="h-full w-full object-fill" />
-                  ) : (
-                    <Building2 className="text-slate-400" size={24} />
-                  )}
+                <div className="flex justify-between items-start w-full">
+                  <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-none bg-slate-100 overflow-hidden border border-slate-200">
+                    {job.imageUrl ? (
+                      <img src={job.imageUrl} alt={job.company} className="h-full w-full object-cover" />
+                    ) : (
+                      <Building2 className="text-slate-400" size={24} />
+                    )}
+                  </div>
+                  <button
+                    onClick={() => toggleSaveJob(job.id)}
+                    className="p-2 text-slate-400 hover:text-primary-600 focus:outline-none transition-colors"
+                    aria-label={savedJobIds.has(job.id) ? "Remove saved job" : "Save job"}
+                  >
+                    <Bookmark className={savedJobIds.has(job.id) ? "fill-primary-600 text-primary-600" : ""} size={20} />
+                  </button>
                 </div>
                 <CardTitle className="line-clamp-1 text-lg">{job.title}</CardTitle>
                 <CardDescription className="flex items-center text-sm font-medium text-slate-700">
@@ -135,11 +225,14 @@ export default function JobsPage() {
                   <span className="ml-2 inline-flex items-center rounded-none bg-slate-100 px-2.5 py-0.5 text-xs font-semibold text-slate-800 border border-slate-200">
                     {job.category || "General"}
                   </span>
+                  <span className="ml-2 inline-flex items-center rounded-none bg-primary-50 px-2.5 py-0.5 text-xs font-semibold text-primary-800 border border-primary-200">
+                    {job.jobType || "Full-time"}
+                  </span>
                 </CardDescription>
               </CardHeader>
               <CardContent className="flex-1 pb-4">
                 <p className="line-clamp-3 text-sm text-slate-700">
-                  {job.description}
+                  {stripFormatting(job.description)}
                 </p>
               </CardContent>
               <CardFooter className="flex items-center justify-between border-t border-slate-200 pt-4">

@@ -8,29 +8,29 @@ import { Input } from "@/components/ui/Input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/Card";
 import Link from "next/link";
 import { Briefcase } from "lucide-react";
+import toast from "react-hot-toast";
 
 export default function Register() {
   const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
     setIsLoading(true);
 
     try {
       const data = await api.post("/auth/register", { name, email, password });
       localStorage.setItem("token", data.token);
-      window.location.href = "/dashboard";
+      toast.success("Account created successfully!");
+      router.push("/dashboard");
     } catch (err) {
       if (err instanceof ApiError) {
-        setError(err.message);
+        toast.error(err.message);
       } else {
-        setError("An unexpected error occurred");
+        toast.error("An unexpected error occurred");
       }
     } finally {
       setIsLoading(false);
@@ -55,11 +55,6 @@ export default function Register() {
               <CardDescription>Enter your details below to create your account</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {error && (
-                <div className="rounded-none border-2 border-red-200 bg-red-50 p-3 text-sm text-red-600">
-                  {error}
-                </div>
-              )}
               <Input
                 label="Full name"
                 type="text"

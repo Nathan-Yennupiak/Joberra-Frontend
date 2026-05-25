@@ -79,6 +79,13 @@ export default function JobDetails() {
                     {job.company}
                   </span>
                   <span className="flex items-center">
+                    <MapPin size={16} className="mr-1.5 text-slate-400" />
+                    {job.location || "Remote"}
+                  </span>
+                  <span className="inline-flex items-center rounded-none bg-primary-50 px-2.5 py-0.5 text-xs font-semibold text-primary-800 border border-primary-200">
+                    {job.jobType || "Full-time"}
+                  </span>
+                  <span className="flex items-center">
                     <Clock size={16} className="mr-1.5 text-slate-400" />
                     Posted {new Date(job.createdAt).toLocaleDateString()}
                   </span>
@@ -92,7 +99,7 @@ export default function JobDetails() {
 
         <div className="p-6 sm:p-10">
           <h3 className="mb-6 text-lg font-semibold text-slate-900">About the role</h3>
-          <div className="prose prose-slate max-w-none whitespace-pre-wrap wrap-break-word text-slate-600">
+          <div className="prose prose-slate max-w-none text-slate-600 whitespace-pre-wrap w-full overflow-hidden">
             {job.description}
           </div>
           <a href={job.jobUrl} target="_blank" rel="noopener noreferrer" className="shrink-0">
