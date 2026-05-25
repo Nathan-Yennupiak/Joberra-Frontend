@@ -86,12 +86,7 @@ export default function JobDetails() {
               </div>
             </div>
             
-            <a href={job.jobUrl} target="_blank" rel="noopener noreferrer" className="shrink-0">
-              <Button size="lg" className="w-full sm:w-auto">
-                Apply Now
-                <ExternalLink size={18} className="ml-2" />
-              </Button>
-            </a>
+            
           </div>
         </div>
 
@@ -100,6 +95,12 @@ export default function JobDetails() {
           <div className="prose prose-slate max-w-none whitespace-pre-wrap text-slate-600">
             {job.description}
           </div>
+          <a href={job.jobUrl} target="_blank" rel="noopener noreferrer" className="shrink-0">
+              <Button size="lg" className="w-full sm:w-auto mt-5">
+                Apply Now
+                <ExternalLink size={18} className="ml-2" />
+              </Button>
+            </a>
         </div>
       </div>
     </div>

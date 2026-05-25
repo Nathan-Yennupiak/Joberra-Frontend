@@ -57,7 +57,7 @@ export default function Home() {
           {jobs.map((job) => (
             <Card key={job.id} className="group flex flex-col transition-all hover:border-primary-600 hover:shadow-none border-2">
               <CardHeader className="pb-4">
-                <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-none bg-slate-100 p-2 overflow-hidden border border-slate-200">
+                <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-none bg-slate-100 overflow-hidden border border-slate-200">
                   {job.imageUrl ? (
                     <img src={job.imageUrl} alt={job.company} className="h-full w-full object-cover" />
                   ) : (
@@ -70,12 +70,12 @@ export default function Home() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="flex-1 pb-4">
-                <p className="line-clamp-3 text-sm text-slate-500">
+                <p className="line-clamp-3 text-sm text-slate-700">
                   {job.description}
                 </p>
               </CardContent>
-              <CardFooter className="flex items-center justify-between border-t border-slate-100 pt-4">
-                <span className="flex items-center text-xs text-slate-500">
+              <CardFooter className="flex items-center justify-between border-t border-slate-200 pt-4">
+                <span className="flex items-center text-xs text-slate-700">
                   <Clock size={14} className="mr-1" />
                   {new Date(job.createdAt).toLocaleDateString()}
                 </span>
