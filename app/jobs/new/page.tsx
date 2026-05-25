@@ -1,0 +1,140 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { api, ApiError } from "@/lib/api";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/Card";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
+
+export default function CreateJob() {
+  const router = useRouter();
+  const [formData, setFormData] = useState({
+    title: "",
+    company: "",
+    description: "",
+    jobUrl: "",
+    imageUrl: "",
+  });
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setIsLoading(true);
+
+    try {
+      // imageUrl can be explicitly null if empty string to satisfy Zod
+      const payload = {
+        ...formData,
+        imageUrl: formData.imageUrl.trim() === "" ? null : formData.imageUrl,
+      };
+      await api.post("/jobs", payload);
+      router.push("/dashboard");
+    } catch (err) {
+      if (err instanceof ApiError) {
+        setError(err.message);
+      } else {
+        setError("An unexpected error occurred");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="container mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
+      <Link href="/dashboard" className="mb-8 inline-flex items-center text-sm font-medium text-slate-500 hover:text-slate-900">
+        <ArrowLeft size={16} className="mr-2" />
+        Back to Dashboard
+      </Link>
+
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-slate-900">Post a new job</h1>
+        <p className="mt-2 text-slate-600">Fill out the details below to publish a new opening.</p>
+      </div>
+
+      <Card>
+        <form onSubmit={handleSubmit}>
+          <CardHeader>
+            <CardTitle>Job Details</CardTitle>
+            <CardDescription>All fields except the logo URL are required.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {error && (
+              <div className="rounded-none border-2 border-red-200 bg-red-50 p-3 text-sm text-red-600">
+                {error}
+              </div>
+            )}
+            
+            <div className="grid gap-6 sm:grid-cols-2">
+              <Input
+                label="Job Title"
+                name="title"
+                required
+                value={formData.title}
+                onChange={handleChange}
+                placeholder="e.g. Senior Frontend Engineer"
+              />
+              <Input
+                label="Company Name"
+                name="company"
+                required
+                value={formData.company}
+                onChange={handleChange}
+                placeholder="e.g. Acme Corp"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="block text-sm font-medium text-slate-700">Job Description</label>
+              <textarea
+                name="description"
+                required
+                rows={6}
+                value={formData.description}
+                onChange={handleChange}
+                placeholder="Describe the role, responsibilities, and requirements..."
+                className="w-full rounded-none border-2 border-slate-200 bg-white px-3 py-2 text-sm placeholder:text-slate-400 focus:border-primary-600 focus:outline-none focus:ring-0 transition-colors"
+              />
+            </div>
+
+            <Input
+              label="Application URL"
+              name="jobUrl"
+              type="url"
+              required
+              value={formData.jobUrl}
+              onChange={handleChange}
+              placeholder="https://yourcompany.com/careers/apply"
+            />
+
+            <Input
+              label="Company Logo URL (Optional)"
+              name="imageUrl"
+              type="url"
+              value={formData.imageUrl}
+              onChange={handleChange}
+              placeholder="https://yourcompany.com/logo.png"
+            />
+            
+          </CardContent>
+          <CardFooter className="flex justify-end space-x-4 border-t border-slate-100 pt-6">
+            <Link href="/dashboard">
+              <Button variant="ghost" type="button">Cancel</Button>
+            </Link>
+            <Button type="submit" isLoading={isLoading}>Publish Job</Button>
+          </CardFooter>
+        </form>
+      </Card>
+    </div>
+  );
+}
