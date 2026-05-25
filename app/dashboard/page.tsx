@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
-import { Job } from "@/lib/types";
+import { IJob } from "@/lib/types";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Plus, Edit2, Trash2, Building2, Clock } from "lucide-react";
@@ -11,7 +11,7 @@ import { useRouter } from "next/navigation";
 
 export default function Dashboard() {
   const router = useRouter();
-  const [jobs, setJobs] = useState<Job[]>([]);
+  const [jobs, setJobs] = useState<IJob[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
 
@@ -31,7 +31,7 @@ export default function Dashboard() {
         const tokenParts = token.split('.');
         if (tokenParts.length === 3) {
           const payload = JSON.parse(atob(tokenParts[1]));
-          const myJobs = data.filter((j: Job) => j.userId === payload.userId);
+          const myJobs = data.filter((j: IJob) => j.userId === payload.userId);
           setJobs(myJobs);
         } else {
           setJobs([]);
@@ -71,7 +71,7 @@ export default function Dashboard() {
 
   return (
     <div className="container mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
-      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mb-8 flex gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-3xl font-bold text-slate-900">Dashboard</h1>
           <p className="mt-2 text-slate-600">Manage your job postings.</p>

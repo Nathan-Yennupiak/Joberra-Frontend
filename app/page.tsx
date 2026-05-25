@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
-import { Job } from "@/lib/types";
+import { IJob } from "@/lib/types";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { MapPin, Building2, Clock, ExternalLink, ChevronRight } from "lucide-react";
@@ -10,13 +10,13 @@ import Link from "next/link";
 import Image from "next/image";
 
 export default function Home() {
-  const [jobs, setJobs] =  useState<Job[]>([]);
+  const [jobs, setJobs] =  useState<IJob[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const data = await api.get('/jobs');
+        const data = await api.get('/jobs?limit=3');
         setJobs(data);
       } catch (error) {
         console.error("Failed to fetch jobs:", error);
@@ -53,41 +53,54 @@ export default function Home() {
           <p className="text-slate-500">Check back later for new opportunities.</p>
         </div>
       ) : (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {jobs.map((job) => (
-            <Card key={job.id} className="group flex flex-col transition-all hover:border-primary-600 hover:shadow-none border-2">
-              <CardHeader className="pb-4">
-                <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-none bg-slate-100 overflow-hidden p-1 border border-slate-200">
-                  {job.imageUrl ? (
-                    <img src={job.imageUrl} alt={job.company} className="h-full w-full object-cover" />
-                  ) : (
-                    <Building2 className="text-slate-400" size={24} />
-                  )}
-                </div>
-                <CardTitle className="line-clamp-1 text-lg">{job.title}</CardTitle>
-                <CardDescription className="flex items-center text-sm font-medium text-slate-700">
-                  {job.company}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="flex-1 pb-4">
-                <p className="line-clamp-3 text-sm text-slate-700">
-                  {job.description}
-                </p>
-              </CardContent>
-              <CardFooter className="flex items-center justify-between border-t border-slate-200 pt-4">
-                <span className="flex items-center text-xs text-slate-700">
-                  <Clock size={14} className="mr-1" />
-                  {new Date(job.createdAt).toLocaleDateString()}
-                </span>
-                <Link href={`/jobs/${job.id}`}>
-                  <Button variant="ghost" size="sm" className="group/btn text-primary-600 hover:bg-primary-50 hover:text-primary-700">
-                    View Details
-                    <ChevronRight size={16} className="ml-1 transition-transform group-hover/btn:translate-x-1" />
-                  </Button>
-                </Link>
-              </CardFooter>
-            </Card>
-          ))}
+        <div className="flex flex-col items-center">
+          <div className="grid w-full gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {jobs.map((job) => (
+              <Card key={job.id} className="group flex flex-col transition-all hover:border-primary-600 hover:shadow-none border-2">
+                <CardHeader className="pb-4">
+                  <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-none bg-slate-100 overflow-hidden border border-slate-200">
+                    {job.imageUrl ? (
+                      <img src={job.imageUrl} alt={job.company} className="h-full w-full object-fill" />
+                    ) : (
+                      <Building2 className="text-slate-400" size={24} />
+                    )}
+                  </div>
+                  <CardTitle className="line-clamp-1 text-lg">{job.title}</CardTitle>
+                  <CardDescription className="flex items-center text-sm font-medium text-slate-700">
+                    {job.company}
+                    <span className="ml-2 inline-flex items-center rounded-none bg-slate-100 px-2.5 py-0.5 text-xs font-semibold text-slate-800 border border-slate-200">
+                      {job.category || "General"}
+                    </span>
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="flex-1 pb-4">
+                  <p className="line-clamp-3 text-sm text-slate-700">
+                    {job.description}
+                  </p>
+                </CardContent>
+                <CardFooter className="flex items-center justify-between border-t border-slate-200 pt-4">
+                  <span className="flex items-center text-xs text-slate-700">
+                    <Clock size={14} className="mr-1" />
+                    {new Date(job.createdAt).toLocaleDateString()}
+                  </span>
+                  <Link href={`/jobs/${job.id}`}>
+                    <Button variant="ghost" size="sm" className="group/btn text-primary-600 hover:bg-primary-50 hover:text-primary-700">
+                      View Details
+                      <ChevronRight size={16} className="ml-1 transition-transform group-hover/btn:translate-x-1" />
+                    </Button>
+                  </Link>
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+          <div className="mt-12">
+            <Link href="/jobs">
+              <Button size="lg" className="px-8 py-6 text-lg font-semibold">
+                See all jobs
+                <ChevronRight size={20} className="ml-2" />
+              </Button>
+            </Link>
+          </div>
         </div>
       )}
     </div>

@@ -14,6 +14,7 @@ export default function CreateJob() {
   const [formData, setFormData] = useState({
     title: "",
     company: "",
+    category: "General",
     description: "",
     jobUrl: "",
     imageUrl: "",
@@ -21,7 +22,7 @@ export default function CreateJob() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -92,6 +93,23 @@ export default function CreateJob() {
                 onChange={handleChange}
                 placeholder="e.g. Acme Corp"
               />
+              <div className="space-y-1.5">
+                <label className="block text-sm font-medium text-slate-700">Category</label>
+                <select
+                  name="category"
+                  required
+                  value={formData.category}
+                  onChange={handleChange}
+                  className="flex h-10 w-full rounded-none border-2 border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:border-primary-600 focus:ring-0 transition-colors"
+                >
+                  <option value="Engineering">Engineering</option>
+                  <option value="Design">Design</option>
+                  <option value="Marketing">Marketing</option>
+                  <option value="Product">Product</option>
+                  <option value="Sales">Sales</option>
+                  <option value="General">General</option>
+                </select>
+              </div>
             </div>
 
             <div className="space-y-1.5">

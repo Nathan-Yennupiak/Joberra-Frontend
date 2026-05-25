@@ -63,7 +63,7 @@ export function Footer() {
         
         <div className="mt-12 border-t-2 border-slate-200 pt-8 flex flex-col md:flex-row justify-center items-center">
           <p className="text-sm text-slate-900 text-center">
-            &copy; {new Date().getFullYear()} JobBoard Inc. All rights reserved.
+            &copy; {new Date().getFullYear()} Joberra Inc. All rights reserved.
           </p>
         </div>
       </div>

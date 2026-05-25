@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { api } from "@/lib/api";
-import { Job } from "@/lib/types";
+import { IJob } from "@/lib/types";
 import { Button } from "@/components/ui/Button";
 import { MapPin, Building2, Clock, ExternalLink, ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -11,7 +11,7 @@ import Link from "next/link";
 export default function JobDetails() {
   const { id } = useParams();
   const router = useRouter();
-  const [job, setJob] = useState<Job | null>(null);
+  const [job, setJob] = useState<IJob | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -92,7 +92,7 @@ export default function JobDetails() {
 
         <div className="p-6 sm:p-10">
           <h3 className="mb-6 text-lg font-semibold text-slate-900">About the role</h3>
-          <div className="prose prose-slate max-w-none whitespace-pre-wrap text-slate-600">
+          <div className="prose prose-slate max-w-none whitespace-pre-wrap wrap-break-word text-slate-600">
             {job.description}
           </div>
           <a href={job.jobUrl} target="_blank" rel="noopener noreferrer" className="shrink-0">

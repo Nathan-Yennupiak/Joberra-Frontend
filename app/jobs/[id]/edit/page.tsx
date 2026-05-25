@@ -16,6 +16,7 @@ export default function EditJob() {
   const [formData, setFormData] = useState({
     title: "",
     company: "",
+    category: "General",
     description: "",
     jobUrl: "",
     imageUrl: "",
@@ -31,6 +32,7 @@ export default function EditJob() {
         setFormData({
           title: data.title,
           company: data.company,
+          category: data.category || "General",
           description: data.description,
           jobUrl: data.jobUrl,
           imageUrl: data.imageUrl || "",
@@ -47,7 +49,7 @@ export default function EditJob() {
     }
   }, [id]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -123,6 +125,23 @@ export default function EditJob() {
                 value={formData.company}
                 onChange={handleChange}
               />
+              <div className="space-y-1.5">
+                <label className="block text-sm font-medium text-slate-700">Category</label>
+                <select
+                  name="category"
+                  required
+                  value={formData.category}
+                  onChange={handleChange}
+                  className="flex h-10 w-full rounded-none border-2 border-slate-200 bg-white px-3 py-2 text-sm focus:outline-none focus:border-primary-600 focus:ring-0 transition-colors"
+                >
+                  <option value="Engineering">Engineering</option>
+                  <option value="Design">Design</option>
+                  <option value="Marketing">Marketing</option>
+                  <option value="Product">Product</option>
+                  <option value="Sales">Sales</option>
+                  <option value="General">General</option>
+                </select>
+              </div>
             </div>
 
             <div className="space-y-1.5">

@@ -7,7 +7,7 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ className = '', label, error, ...props }, ref) => {
+  ({ className = '', label, error, type, ...props }, ref) => {
     const [showPassword, setShowPassword] = useState(false);
     return (
       <div className="w-full space-y-1.5">
@@ -19,19 +19,19 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         <div className="relative">
           <input
             ref={ref}
-            type={props.type === 'password' && showPassword ? 'text' : props.type}
+            type={type === 'password' && showPassword ? 'text' : type}
             className={`
               flex h-10 w-full rounded-none border-2 border-slate-200 bg-white px-3 py-2 text-sm 
               placeholder:text-slate-400 transition-colors
               focus:outline-none focus:border-primary-600 focus:ring-0
               disabled:cursor-not-allowed disabled:opacity-50
               ${error ? 'border-red-500 focus:border-red-600' : ''}
-              ${props.type === 'password' ? 'pr-10' : ''}
+              ${type === 'password' ? 'pr-10' : ''}
               ${className}
             `}
             {...props}
           />
-          {props.type === 'password' && (
+          {type === 'password' && (
             <button
               type="button"
               className="absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600 focus:outline-none"
